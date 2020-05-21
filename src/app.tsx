@@ -9,7 +9,7 @@ import {
   ThemeProvider,
   newskitLightTheme,
   EventTrigger,
-  useInstrumentation,
+  withInstrumentation,
 } from "newskit";
 
 const contextObject = {
@@ -20,10 +20,25 @@ const instrumentation = createEventInstrumentation(
   contextObject
 );
 
+const ButtonWithInstrumentation: React.FC = withInstrumentation(
+  ({fireEvent}) => (
+    <Button
+      onClick={() => {
+        fireEvent({
+          originator: "button",
+          trigger: EventTrigger.Click,
+        });
+      }}
+    >
+      Hello, world!
+    </Button>
+  ),
+);
+
 const Rail: React.FC<{
   label: string;
 }> = ({ label }) => {
-  const { fireEvent } = useInstrumentation();
+  // const { fireEvent } = useInstrumentation();
 
   return (
     <div>
@@ -33,16 +48,7 @@ const Rail: React.FC<{
           railName: label,
         }}
       >
-        <Button
-          onClick={() => {
-            fireEvent({
-              originator: "button",
-              trigger: EventTrigger.Click,
-            });
-          }}
-        >
-          Hello, world!
-        </Button>
+        <ButtonWithInstrumentation />
       </InstrumentationProvider>
     </div>
   );
