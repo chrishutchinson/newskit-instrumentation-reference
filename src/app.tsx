@@ -20,10 +20,29 @@ const instrumentation = createEventInstrumentation(
   contextObject
 );
 
+
+const MyButton: React.FC = props => {
+  const {fireEvent} = useInstrumentation();
+
+  return (
+    <Button
+      {...props}
+      onClick={() => {
+        fireEvent({
+          originator: "button",
+          trigger: EventTrigger.Click,
+        });
+      }}
+    >
+      Hello, world!
+    </Button>
+  );
+};
+
 const Rail: React.FC<{
   label: string;
 }> = ({ label }) => {
-  const { fireEvent } = useInstrumentation();
+  // const { fireEvent } = useInstrumentation();
 
   return (
     <div>
@@ -33,16 +52,7 @@ const Rail: React.FC<{
           railName: label,
         }}
       >
-        <Button
-          onClick={() => {
-            fireEvent({
-              originator: "button",
-              trigger: EventTrigger.Click,
-            });
-          }}
-        >
-          Hello, world!
-        </Button>
+        <MyButton />
       </InstrumentationProvider>
     </div>
   );
